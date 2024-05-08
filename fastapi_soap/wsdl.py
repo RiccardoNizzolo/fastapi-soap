@@ -64,19 +64,21 @@ def generate_xsd_element(
             display_as_type(model_), 'string'
         )
         element.set('type', f'xs:{element_type}')
+        if hasattr(model_field, 'nillable') and model_field.nillable:
+            element.set('nillable', 'true')
 
-    # if model_field and model_field.is_complex():
-    #     if model_field.shape == 2:
-    #         # TODO: get gt and lt
-    #         element.set(
-    #             'minOccurs', str(model_field.field_info.min_items or 0)
-    #         )
-    #         element.set(
-    #             'maxOccurs',
-    #             str(model_field.field_info.max_items or 'unbounded'),
-    #         )
-    #     else:
-    #         ...
+    if model_field and model_field.is_complex():
+        if model_field.shape == 2:
+            # TODO: get gt and lt
+            element.set(
+                'minOccurs', str(model_field.field_info.min_items or 0)
+            )
+            element.set(
+                'maxOccurs',
+                str(model_field.field_info.max_items or 'unbounded'),
+            )
+        else:
+            ...
 
     return element
 
