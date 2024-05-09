@@ -58,6 +58,16 @@ def generate_xsd_element(
             sequence.append(tag)
 
         element.append(complex_type)
+    elif (hasattr(model_, '__origin__')and issubclass(model_.__args__[0], BaseXmlModel)):
+        complex_type = Element('xs:complexType')
+        sequence = ET.SubElement(complex_type, 'xs:sequence')
+
+        for model_field_name, model_field_ in model_.__args__[0].__fields__.items():
+
+            tag = generate_xsd_element(model_field=model_field_, model_field_name=model_field_name)
+            sequence.append(tag)
+
+        element.append(complex_type)
 
     else:
         element_type = PYTHON_XSD_TYPE_MAP.get(
