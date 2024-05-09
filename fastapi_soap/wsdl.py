@@ -67,18 +67,15 @@ def generate_xsd_element(
         if hasattr(model_field, 'nillable') and model_field.nillable:
             element.set('nillable', 'true')
 
-    if model_field and model_field.is_complex():
-        if model_field.shape == 2:
+    if model_field and  hasattr(model_field.annotation,'_name') and model_field.annotation._name in ['List']:
             # TODO: get gt and lt
             element.set(
-                'minOccurs', str(model_field.field_info.min_items or 0)
+                'minOccurs', str(0)
             )
             element.set(
                 'maxOccurs',
-                str(model_field.field_info.max_items or 'unbounded'),
+                str('unbounded'),
             )
-        else:
-            ...
 
     return element
 
